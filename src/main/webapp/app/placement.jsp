@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -7,7 +6,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Ship Placement</title>
 </head>
-<body>
+<body onload="checkStatus()">
 <div id="wait-another" class="w3-hide">
     <h1>Please wait another player</h1>
 </div>
@@ -43,11 +42,12 @@
             "method": "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         }).then(function (response) {
             console.log("DONE");
+            checkStatus();
         });
     }
     function checkStatus() {
@@ -65,6 +65,8 @@
             if (game.status === "PLACEMENT" && game.playerActive) {
                 document.getElementById("placement-field").classList.remove("w3-hide");
                 document.getElementById("wait-another").classList.add("w3-hide");
+            } else if (game.status === 'STARTED') {
+                location.href = "<c:url value='/app/game.jsp'/>";
             } else {
                 document.getElementById("placement-field").classList.add("w3-hide");
                 document.getElementById("wait-another").classList.remove("w3-hide");
@@ -72,9 +74,6 @@
             }
         });
     }
-    document.onload(function () {
-        checkStatus();
-    })
 </script>
 </body>
 </html>
