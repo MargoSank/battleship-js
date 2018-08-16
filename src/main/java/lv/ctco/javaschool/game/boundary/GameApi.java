@@ -105,7 +105,18 @@ public class GameApi {
         log.info("Firing to " + address);
         User currentUser = userStore.getCurrentUser();
         Optional<Game> game = gameStore.getOpenGameFor(currentUser);
-        game.ifPresent(g -> {
+        game.ifPresent((Game g) -> {
+            User opposite = g.playerHaveShot(currentUser);
+            Optional<Cell> cell = gameStore.getCellState(g, opposite, address,false);
+            // sdeltj proverku esli status HIT to menjatj ne nado cvet
+            if(cell.isPresent() && cell.get().getState()==CellState.SHIP){
+                Cell c = cell.get();
+                c.setState(CellState.HIT);
+                // dobavitj dla vtorogo Player2
+
+            } else {
+                gameStore.setCellState(g, opposite, address,false,CellState.MISS );
+            }
             boolean p1a = g.isPlayer1Active();
             g.setPlayer1Active(!p1a);
             g.setPlayer2Active(p1a);

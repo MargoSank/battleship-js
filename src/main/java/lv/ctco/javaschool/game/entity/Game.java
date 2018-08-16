@@ -33,6 +33,16 @@ public class Game {
         }
     }
 
+    public User playerHaveShot(User player){
+        if (player.equals(player1)) {
+            return player2;
+        } else if (player.equals(player2)) {
+            return player1;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public void setPlayerActive(User player, boolean active) {
         if (player.equals(player1)) {
             player1Active = active;

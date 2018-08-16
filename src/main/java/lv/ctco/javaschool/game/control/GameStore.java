@@ -53,9 +53,7 @@ public class GameStore {
                 .getResultStream()
                 .findFirst();
     }
-
-
-    public void setCellState(Game game, User player, String address, boolean targetArea, CellState state) {
+    public Optional<Cell> getCellState(Game game, User player, String address, boolean targetArea){
         Optional<Cell> cell = em.createQuery(
                 "select c from Cell c " +
                         "where c.game = :game " +
@@ -68,6 +66,12 @@ public class GameStore {
                 .setParameter("address", address)
                 .getResultStream()
                 .findFirst();
+        return cell;
+    }
+
+
+    public void setCellState(Game game, User player, String address, boolean targetArea, CellState state) {
+        Optional<Cell> cell = getCellState(game,player,address,targetArea);
         if (cell.isPresent()) {
             cell.get().setState(state);
         } else {
