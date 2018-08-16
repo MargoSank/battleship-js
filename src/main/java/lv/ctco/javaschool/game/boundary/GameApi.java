@@ -107,15 +107,23 @@ public class GameApi {
         Optional<Game> game = gameStore.getOpenGameFor(currentUser);
         game.ifPresent((Game g) -> {
             User opposite = g.playerHaveShot(currentUser);
-            Optional<Cell> cell = gameStore.getCellState(g, opposite, address,false);
-            // sdeltj proverku esli status HIT to menjatj ne nado cvet
-            if(cell.isPresent() && cell.get().getState()==CellState.SHIP){
-                Cell c = cell.get();
-                c.setState(CellState.HIT);
-                // dobavitj dla vtorogo Player2
-
+            Optional<Cell> cell = gameStore.getCellState(g, opposite, address, false);
+            if (cell.isPresent()){
+                switch (cell.get().getState()){
+                    case HIT:
+                        break;
+                    case MISS:
+                        break;
+                    case SHIP:
+                        Cell c = cell.get();
+                        c.setState(CellState.HIT);
+                        gameStore.setCellState(g, currentUser, address, true, CellState.HIT);
+                        break;
+                }
             } else {
-                gameStore.setCellState(g, opposite, address,false,CellState.MISS );
+                gameStore.setCellState(g, opposite, address, false, CellState.MISS);
+                gameStore.setCellState(g, currentUser, address, true, CellState.MISS);
+
             }
             boolean p1a = g.isPlayer1Active();
             g.setPlayer1Active(!p1a);
@@ -143,5 +151,4 @@ public class GameApi {
         dto.setState(cell.getState());
         return dto;
     }
-
 }

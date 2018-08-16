@@ -19,9 +19,7 @@ public class GameStore {
 
     public Optional<Game> getIncompleteGame() {
         return em.createQuery(
-                "select g " +
-                        "from Game g " +
-                        "where g.status = :status", Game.class)
+                "select g " + "from Game g " + "where g.status = :status", Game.class)
                 .setParameter("status", GameStatus.INCOMPLETE)
                 .setMaxResults(1)
                 .getResultStream()
@@ -30,10 +28,7 @@ public class GameStore {
 
     public Optional<Game> getStartedGameFor(User user, GameStatus status) {
         return em.createQuery(
-                "select g " +
-                        "from Game g " +
-                        "where g.status = :status " +
-                        "  and (g.player1 = :user " +
+                "select g " + "from Game g " + "where g.status = :status " + "  and (g.player1 = :user " +
                         "   or g.player2 = :user)", Game.class)
                 .setParameter("status", status)
                 .setParameter("user", user)

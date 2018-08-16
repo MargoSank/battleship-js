@@ -9,19 +9,24 @@
         table {
             border-collapse: collapse;
         }
+
         table, th, td {
             border: 1px solid black;
         }
+
         td {
             width: 30px;
             text-align: center;
         }
+
         td.SHIP {
             background-color: black;
         }
+
         td.MISS {
             background-color: aqua;
         }
+
         td.HIT {
             background-color: red;
         }
@@ -31,7 +36,7 @@
 <div id="wait-another" class="w3-hide">
     <h1>Please wait another player</h1>
 </div>
-<div style="display: inline-block" >
+<div style="display: inline-block">
     <table>
         <tr>
             <td>&nbsp;</td>
@@ -94,8 +99,10 @@
                 window.setTimeout(function () {
                     checkStatus();
                 }, 1000);
+            } else if (game.status === 'STARTED') {
+                location.href = "<c:url value='/app/finish.jsp'/>";
             } else {
-            return;
+                return;
             }
             drawShips();
         });
@@ -121,7 +128,7 @@
 
     function setRadioButtonsVisible(visible) {
         var radioButtons = document.querySelectorAll('input[name=addr]');
-        radioButtons.forEach(function(btn){
+        radioButtons.forEach(function (btn) {
             if (visible) {
                 btn.classList.remove("w3-hide");
             } else {
@@ -129,6 +136,7 @@
             }
         });
     }
+
     function drawShips() {
         fetch("<c:url value='/api/game/cells'/>", {
             "method": "GET",
