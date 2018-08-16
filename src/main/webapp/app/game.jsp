@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Ship Placement</title>
+    <style>
+
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        td {
+            width: 25px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body onload="checkStatus()">
 <div id="wait-another" class="w3-hide">
     <h1>Please wait another player</h1>
-    <h1>TODO: fields expected</h1>
-    <span>
-        <table>
+</div>
+<div style="display: inline-block" >
+    <table>
         <tr>
             <td>&nbsp;</td>
             <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
@@ -22,14 +35,14 @@
             <tr>
                 <td><c:out value="${row}"/></td>
                 <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
-
+                    <td><input name="addr" type="radio" id="${col}${row}"/>&nbsp;</td>
                 </c:forTokens>
             </tr>
         </c:forTokens>
-        </table>
-    </span>
-    <span>
-        <table>
+    </table>
+</div>
+<div style="display: inline-block">
+    <table>
         <tr>
             <td>&nbsp;</td>
             <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
@@ -40,53 +53,14 @@
             <tr>
                 <td><c:out value="${row}"/></td>
                 <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
-                    <td><input type="checkbox" id="${col}${row}"/></td>
+                    <td>&nbsp;</td>
                 </c:forTokens>
             </tr>
         </c:forTokens>
-        </table>
-        <button type="button" onclick="fire()">Fire!</button>
-    </span>
+    </table>
 </div>
 <div id="select-fire" class="w3-hide">
-    <h1>TODO: fields expected</h1>
-    <span>
-        <table>
-        <tr>
-            <td>&nbsp;</td>
-            <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
-                <td><c:out value="${col}"/></td>
-            </c:forTokens>
-        </tr>
-        <c:forTokens items="1,2,3,4,5,6,7,8,9,10" delims="," var="row">
-            <tr>
-                <td><c:out value="${row}"/></td>
-                <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
-
-                </c:forTokens>
-            </tr>
-        </c:forTokens>
-        </table>
-    </span>
-    <span>
-        <table>
-        <tr>
-            <td>&nbsp;</td>
-            <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
-                <td><c:out value="${col}"/></td>
-            </c:forTokens>
-        </tr>
-        <c:forTokens items="1,2,3,4,5,6,7,8,9,10" delims="," var="row">
-            <tr>
-                <td><c:out value="${row}"/></td>
-                <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
-                    <td><input type="checkbox" id="${col}${row}" onchange="cellClicked('${col}${row}')"/></td>
-                </c:forTokens>
-            </tr>
-        </c:forTokens>
-        </table>
         <button type="button" onclick="fire()">Fire!</button>
-    </span>
 </div>
 <script>
     function checkStatus() {
@@ -104,9 +78,11 @@
             if (game.status === "STARTED" && game.playerActive) {
                 document.getElementById("wait-another").classList.add("w3-hide");
                 document.getElementById("select-fire").classList.remove("w3-hide");
+                setRadioButtonsVisible(true);
             } else if (game.status === "STARTED" && !game.playerActive) {
                 document.getElementById("wait-another").classList.remove("w3-hide");
                 document.getElementById("select-fire").classList.add("w3-hide");
+                setRadioButtonsVisible(false);
                 window.setTimeout(function () {
                     checkStatus();
                 }, 1000);
@@ -114,9 +90,11 @@
         });
     }
 
-
     function fire() {
-        console.log("checking status");
+        console.log("firing");
+        var checked = document.querySelector('input[name=addr]:checked');
+        var checkedAddr = checked.id;
+        console.log("firing addr " + checkedAddr);
         fetch("<c:url value='/api/game/fire'/>", {
             "method": "POST",
             headers: {
@@ -126,6 +104,17 @@
         }).then(function (response) {
             console.log("DONE");
             checkStatus();
+        });
+    }
+
+    function setRadioButtonsVisible(visible) {
+        var radioButtons = document.querySelectorAll('input[name=addr]');
+        radioButtons.forEach(function(btn){
+            if (visible) {
+                btn.classList.remove("w3-hide");
+            } else {
+                btn.classList.add("w3-hide");
+            }
         });
     }
 </script>

@@ -110,4 +110,10 @@ public class GameApi {
         });
     }
 
+    @POST
+    @RolesAllowed({"ADMIN","USER"})
+    @Path("/searceCell")
+    public List<> getCellStatus {
+
+    }
 }
