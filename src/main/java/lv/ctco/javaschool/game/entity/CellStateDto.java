@@ -6,4 +6,6 @@ import lombok.Data;
 public class CellStateDto {
     private String address;
     private CellState state;
+    private boolean targetArea;
+
 }
