@@ -10,10 +10,83 @@
 <div id="wait-another" class="w3-hide">
     <h1>Please wait another player</h1>
     <h1>TODO: fields expected</h1>
+    <span>
+        <table>
+        <tr>
+            <td>&nbsp;</td>
+            <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+                <td><c:out value="${col}"/></td>
+            </c:forTokens>
+        </tr>
+        <c:forTokens items="1,2,3,4,5,6,7,8,9,10" delims="," var="row">
+            <tr>
+                <td><c:out value="${row}"/></td>
+                <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+
+                </c:forTokens>
+            </tr>
+        </c:forTokens>
+        </table>
+    </span>
+    <span>
+        <table>
+        <tr>
+            <td>&nbsp;</td>
+            <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+                <td><c:out value="${col}"/></td>
+            </c:forTokens>
+        </tr>
+        <c:forTokens items="1,2,3,4,5,6,7,8,9,10" delims="," var="row">
+            <tr>
+                <td><c:out value="${row}"/></td>
+                <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+                    <td><input type="checkbox" id="${col}${row}"/></td>
+                </c:forTokens>
+            </tr>
+        </c:forTokens>
+        </table>
+        <button type="button" onclick="fire()">Fire!</button>
+    </span>
 </div>
 <div id="select-fire" class="w3-hide">
     <h1>TODO: fields expected</h1>
-    <button type="button" onclick="fire()">Fire!</button>
+    <span>
+        <table>
+        <tr>
+            <td>&nbsp;</td>
+            <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+                <td><c:out value="${col}"/></td>
+            </c:forTokens>
+        </tr>
+        <c:forTokens items="1,2,3,4,5,6,7,8,9,10" delims="," var="row">
+            <tr>
+                <td><c:out value="${row}"/></td>
+                <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+
+                </c:forTokens>
+            </tr>
+        </c:forTokens>
+        </table>
+    </span>
+    <span>
+        <table>
+        <tr>
+            <td>&nbsp;</td>
+            <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+                <td><c:out value="${col}"/></td>
+            </c:forTokens>
+        </tr>
+        <c:forTokens items="1,2,3,4,5,6,7,8,9,10" delims="," var="row">
+            <tr>
+                <td><c:out value="${row}"/></td>
+                <c:forTokens items="A,B,C,D,E,F,G,H,I,J" delims="," var="col">
+                    <td><input type="checkbox" id="${col}${row}" onchange="cellClicked('${col}${row}')"/></td>
+                </c:forTokens>
+            </tr>
+        </c:forTokens>
+        </table>
+        <button type="button" onclick="fire()">Fire!</button>
+    </span>
 </div>
 <script>
     function checkStatus() {
@@ -40,6 +113,8 @@
             }
         });
     }
+
+
     function fire() {
         console.log("checking status");
         fetch("<c:url value='/api/game/fire'/>", {
