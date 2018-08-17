@@ -151,4 +151,5 @@ public class GameApi {
         dto.setState(cell.getState());
         return dto;
     }
+
 }
