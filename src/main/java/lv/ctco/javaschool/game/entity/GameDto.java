@@ -1,6 +1,6 @@
 package lv.ctco.javaschool.game.entity;
 
-        import lombok.Data;
+import lombok.Data;
 
 @Data
 public class GameDto {

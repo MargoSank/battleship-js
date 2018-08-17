@@ -119,6 +119,9 @@ public class GameApi {
                         gameStore.setCellState(g, currentUser, address, true, CellState.HIT);
                         if (!gameStore.hasShip(opposite, g)) {
                             g.setStatus(GameStatus.FINISHED);
+                           // TableDto dto = new TableDto();
+                            //dto.setWinName(currentUser.getUsername());
+                            //dto.setShot();
                         }
                         return;
                 }
@@ -155,7 +158,7 @@ public class GameApi {
     @GET
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/top")
-    public void drawTable () {
+    public TableDto drawTable () {
 
     }
 }
