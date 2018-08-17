@@ -9,24 +9,19 @@
         table {
             border-collapse: collapse;
         }
-
         table, th, td {
             border: 1px solid black;
         }
-
         td {
             width: 30px;
             text-align: center;
         }
-
         td.SHIP {
             background-color: black;
         }
-
         td.MISS {
             background-color: aqua;
         }
-
         td.HIT {
             background-color: red;
         }
@@ -99,16 +94,15 @@
                 window.setTimeout(function () {
                     checkStatus();
                 }, 1000);
-            } else if (game.status === 'STARTED') {
+            } else if (game.status === 'FINISHED') {
                 location.href = "<c:url value='/app/finish.jsp'/>";
+                return;
             } else {
                 return;
             }
             drawShips();
         });
-
     }
-
     function fire() {
         console.log("firing");
         var checked = document.querySelector('input[name=addr]:checked');
@@ -125,7 +119,6 @@
             checkStatus();
         });
     }
-
     function setRadioButtonsVisible(visible) {
         var radioButtons = document.querySelectorAll('input[name=addr]');
         radioButtons.forEach(function (btn) {
@@ -136,7 +129,6 @@
             }
         });
     }
-
     function drawShips() {
         fetch("<c:url value='/api/game/cells'/>", {
             "method": "GET",

@@ -25,7 +25,6 @@ public class GameStore {
                 .getResultStream()
                 .findFirst();
     }
-
     public Optional<Game> getStartedGameFor(User user, GameStatus status) {
         return em.createQuery(
                 "select g " + "from Game g " + "where g.status = :status " + "  and (g.player1 = :user " +
@@ -35,7 +34,18 @@ public class GameStore {
                 .getResultStream()
                 .findFirst();
     }
-
+    public Optional<Game> getLastGameFor(User currentUser) {
+        return em.createQuery(
+                "select g " +
+                        "from Game g " +
+                        "  where (g.player1 = :user " +
+                        "   or g.player2 = :user) " +
+                        "order by g.id desc ", Game.class)
+                .setParameter("user", currentUser)
+                .setMaxResults(1)
+                .getResultStream()
+                .findFirst();
+    }
     public Optional<Game> getOpenGameFor(User user) {
         return em.createQuery(
                 "select g " +
@@ -63,8 +73,6 @@ public class GameStore {
                 .findFirst();
         return cell;
     }
-
-
     public void setCellState(Game game, User player, String address, boolean targetArea, CellState state) {
         Optional<Cell> cell = getCellState(game,player,address,targetArea);
         if (cell.isPresent()) {
@@ -79,7 +87,6 @@ public class GameStore {
             em.persist(newCell);
         }
     }
-
     public void setShips(Game game, User player, boolean targetArea, List<String> ships) {
         clearField(game, player, targetArea);
         ships.stream()
@@ -93,7 +100,6 @@ public class GameStore {
                     return c;
                 }).forEach(c -> em.persist(c));
     }
-
     private void clearField(Game game, User player, boolean targetArea) {
         List<Cell> cells = em.createQuery(
                 "select c " +
@@ -107,8 +113,6 @@ public class GameStore {
                 .getResultList();
         cells.forEach(c -> em.remove(c));
     }
-
-
     public List<Cell> getCells(Game game, User player) {
         return em.createQuery(
                 "select c " +
@@ -118,5 +122,14 @@ public class GameStore {
                 .setParameter("game", game)
                 .setParameter("user", player)
                 .getResultList();
+    }
+    public boolean hasShip(User player, Game game) {
+        List<Cell> cells = getCells(game, player);
+        for (Cell c : cells) {
+            if (c.getState() == CellState.SHIP && !c.isTargetArea()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

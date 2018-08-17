@@ -32,7 +32,6 @@ public class Game {
             throw new IllegalArgumentException();
         }
     }
-
     public User playerHaveShot(User player){
         if (player.equals(player1)) {
             return player2;
@@ -42,7 +41,6 @@ public class Game {
             throw new IllegalArgumentException();
         }
     }
-
     public void setPlayerActive(User player, boolean active) {
         if (player.equals(player1)) {
             player1Active = active;

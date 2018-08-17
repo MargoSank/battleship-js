@@ -55,7 +55,6 @@ public class GameApi {
             em.persist(newGame);
         }
     }
-
     @POST
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/cells")
@@ -83,13 +82,12 @@ public class GameApi {
             }
         });
     }
-
     @GET
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/status")
     public GameDto getGameStatus() {
         User currentUser = userStore.getCurrentUser();
-        Optional<Game> game = gameStore.getOpenGameFor(currentUser);
+        Optional<Game> game = gameStore.getLastGameFor(currentUser);
         return game.map(g -> {
             GameDto dto = new GameDto();
             dto.setStatus(g.getStatus());
@@ -97,9 +95,8 @@ public class GameApi {
             return dto;
         }).orElseThrow(IllegalStateException::new);
     }
-
     @POST
-    @RolesAllowed({"ADMIN","USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     @Path("/fire/{address}")
     public void doFire(@PathParam("address") String address) {
         log.info("Firing to " + address);
@@ -108,8 +105,8 @@ public class GameApi {
         game.ifPresent((Game g) -> {
             User opposite = g.playerHaveShot(currentUser);
             Optional<Cell> cell = gameStore.getCellState(g, opposite, address, false);
-            if (cell.isPresent()){
-                switch (cell.get().getState()){
+            if (cell.isPresent()) {
+                switch (cell.get().getState()) {
                     case HIT:
                         break;
                     case MISS:
@@ -118,7 +115,10 @@ public class GameApi {
                         Cell c = cell.get();
                         c.setState(CellState.HIT);
                         gameStore.setCellState(g, currentUser, address, true, CellState.HIT);
-                        break;
+                        if (!gameStore.hasShip(opposite, g)) {
+                            g.setStatus(GameStatus.FINISHED);
+                        }
+                        return;
                 }
             } else {
                 gameStore.setCellState(g, opposite, address, false, CellState.MISS);
@@ -128,9 +128,9 @@ public class GameApi {
             boolean p1a = g.isPlayer1Active();
             g.setPlayer1Active(!p1a);
             g.setPlayer2Active(p1a);
+
         });
     }
-
     @GET
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/cells")
