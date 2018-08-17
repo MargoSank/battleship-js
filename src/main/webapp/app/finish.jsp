@@ -12,17 +12,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>The game ended</title>
-    <style>
-
-    </style>
 </head>
 <body onload="activePlayer()">
-    <h1>The game ended</h1>
-<div id="win" class="w3-hide">
-    <h2>You win!</h2>
+<div class="w3-display-topmiddle w3-hide-small">
+    <h2>The game ended</h2>
 </div>
-<div id="lose" class="w3-hide">
+<div id="win" class="w3-hide w3-display-middle">
+    <h1>Congratulations! You win!</h1>
+</div>
+<div id="lose" class="w3-hide w3-display-middle">
     <h2>You lose!</h2>
+</div>
+<div id="newGame" class=" w3-container">
+    <p>
+    <button type="button" class="w3-button w3-green w3-border w3-round-large" onclick="newGame()">New game!</button>
 </div>
 <script>
     function activePlayer() {
@@ -44,6 +47,9 @@
                 document.getElementById("lose").classList.remove("w3-hide");
             }
         });
+    }
+    function newGame() {
+        location.href = "<c:url value='/app/start.jsp'/>";
     }
 </script>
 

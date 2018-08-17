@@ -27,7 +27,11 @@
             </tr>
         </c:forTokens>
     </table>
-    <button type="button" onclick="ready()">Ready!</button>
+    <div>
+        <p>
+            <button type="button" class="w3-btn w3-green w3-border w3-round-large" onclick="ready()">Ready!</button>
+        </p>
+    </div>
 </div>
 <script>
     var data = {};
