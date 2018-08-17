@@ -1,6 +1,7 @@
 package lv.ctco.javaschool.game.boundary;
 
 
+import javafx.scene.control.ListCell;
 import lombok.extern.java.Log;
 import lv.ctco.javaschool.auth.control.UserStore;
 import lv.ctco.javaschool.auth.entity.domain.User;
@@ -103,6 +104,7 @@ public class GameApi {
         User currentUser = userStore.getCurrentUser();
         Optional<Game> game = gameStore.getOpenGameFor(currentUser);
         game.ifPresent((Game g) -> {
+            g.setPlayerHaveShot(currentUser);
             User opposite = g.playerHaveShot(currentUser);
             Optional<Cell> cell = gameStore.getCellState(g, opposite, address, false);
             if (cell.isPresent()) {
@@ -128,7 +130,6 @@ public class GameApi {
             boolean p1a = g.isPlayer1Active();
             g.setPlayer1Active(!p1a);
             g.setPlayer2Active(p1a);
-
         });
     }
     @GET
@@ -151,5 +152,10 @@ public class GameApi {
         dto.setState(cell.getState());
         return dto;
     }
+    @GET
+    @RolesAllowed({"ADMIN", "USER"})
+    @Path("/top")
+    public void drawTable () {
 
+    }
 }

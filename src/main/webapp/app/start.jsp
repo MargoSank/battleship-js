@@ -17,6 +17,32 @@
         <button type="button" class="w3-btn w3-green w3-border w3-round-large" onclick="startGame()">Start Game</button>
     </p>
 </div>
+<h2>Top 10 players</h2>
+<table class="w3-table-all">
+    <thead>
+    <tr class="w3-green">
+        <th>Place</th>
+        <th>Name</th>
+        <th>Shot</th>
+    </tr>
+    </thead>
+    <tr>
+        <td>1</td>
+        <td>Smith</td>
+        <td>50</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Jackson</td>
+        <td>94</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Johnson</td>
+        <td>67</td>
+    </tr>
+</table>
+</div>
 <script>
     function logout() {
         fetch("<c:url value='/api/auth/logout'/>", {"method": "POST"})
@@ -29,6 +55,21 @@
             .then(function (response) {
                 location.href = "/app/placement.jsp";
             });
+    }
+    function drawTopTable() {
+        fetch("<c:url value='/api/game/top'/>", {
+            "method": "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(function (cells) {
+            cells.forEach(function myFunction(myObject) {
+                w3.displayObject("id01", myObject);
+            });
+        });
     }
 </script>
 </body>

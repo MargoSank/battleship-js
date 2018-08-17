@@ -52,6 +52,5 @@
         location.href = "<c:url value='/app/start.jsp'/>";
     }
 </script>
-
 </body>
 </html>
