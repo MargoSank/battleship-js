@@ -34,7 +34,7 @@ public class Game {
             throw new IllegalArgumentException();
         }
     }
-    public User playerHaveShot(User player){
+    public User oppositePlayer(User player){
         if (player.equals(player1)) {
             return player2;
         } else if (player.equals(player2)) {
@@ -57,6 +57,15 @@ public class Game {
             shotCounter1++;
         } else if(player.equals(player2)) {
             shotCounter2++;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+    public int returnPlayerShots(User player) {
+        if(player.equals(player1)){
+            return shotCounter1;
+        } else if(player.equals(player2)) {
+            return shotCounter2;
         } else {
             throw new IllegalArgumentException();
         }

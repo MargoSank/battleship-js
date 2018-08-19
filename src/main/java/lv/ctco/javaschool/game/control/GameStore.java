@@ -1,10 +1,7 @@
 package lv.ctco.javaschool.game.control;
 
 import lv.ctco.javaschool.auth.entity.domain.User;
-import lv.ctco.javaschool.game.entity.Cell;
-import lv.ctco.javaschool.game.entity.CellState;
-import lv.ctco.javaschool.game.entity.Game;
-import lv.ctco.javaschool.game.entity.GameStatus;
+import lv.ctco.javaschool.game.entity.*;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -33,6 +30,12 @@ public class GameStore {
                 .setParameter("user", user)
                 .getResultStream()
                 .findFirst();
+    }
+    public List<TopTable> getTopTable() {
+        return em.createQuery(
+                "select t " + "from TopTable t ", TopTable.class)
+                .setMaxResults(10)
+                .getResultList();
     }
     public Optional<Game> getLastGameFor(User currentUser) {
         return em.createQuery(
@@ -86,6 +89,12 @@ public class GameStore {
             newCell.setState(state);
             em.persist(newCell);
         }
+    }
+    public void setWinner(User user, int shots) {
+            TopTable winner = new TopTable();
+            winner.setWinName(user);
+            winner.setShots(shots);
+            em.persist(winner);
     }
     public void setShips(Game game, User player, boolean targetArea, List<String> ships) {
         clearField(game, player, targetArea);

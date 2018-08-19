@@ -1,7 +1,6 @@
 package lv.ctco.javaschool.game.boundary;
 
 
-import javafx.scene.control.ListCell;
 import lombok.extern.java.Log;
 import lv.ctco.javaschool.auth.control.UserStore;
 import lv.ctco.javaschool.auth.entity.domain.User;
@@ -56,6 +55,7 @@ public class GameApi {
             em.persist(newGame);
         }
     }
+
     @POST
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/cells")
@@ -83,6 +83,7 @@ public class GameApi {
             }
         });
     }
+
     @GET
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/status")
@@ -96,6 +97,7 @@ public class GameApi {
             return dto;
         }).orElseThrow(IllegalStateException::new);
     }
+
     @POST
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/fire/{address}")
@@ -105,7 +107,7 @@ public class GameApi {
         Optional<Game> game = gameStore.getOpenGameFor(currentUser);
         game.ifPresent((Game g) -> {
             g.setPlayerHaveShot(currentUser);
-            User opposite = g.playerHaveShot(currentUser);
+            User opposite = g.oppositePlayer(currentUser);
             Optional<Cell> cell = gameStore.getCellState(g, opposite, address, false);
             if (cell.isPresent()) {
                 switch (cell.get().getState()) {
@@ -119,9 +121,7 @@ public class GameApi {
                         gameStore.setCellState(g, currentUser, address, true, CellState.HIT);
                         if (!gameStore.hasShip(opposite, g)) {
                             g.setStatus(GameStatus.FINISHED);
-                           // TableDto dto = new TableDto();
-                            //dto.setWinName(currentUser.getUsername());
-                            //dto.setShot();
+                            gameStore.setWinner(currentUser, g.returnPlayerShots(currentUser));
                         }
                         return;
                 }
@@ -135,6 +135,7 @@ public class GameApi {
             g.setPlayer2Active(p1a);
         });
     }
+
     @GET
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/cells")
@@ -148,6 +149,7 @@ public class GameApi {
                     .collect(Collectors.toList());
         }).orElseThrow(IllegalStateException::new);
     }
+
     private CellStateDto convertToDto(Cell cell) {
         CellStateDto dto = new CellStateDto();
         dto.setTargetArea(cell.isTargetArea());
@@ -155,10 +157,20 @@ public class GameApi {
         dto.setState(cell.getState());
         return dto;
     }
+
     @GET
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/top")
-    public TableDto drawTable () {
-
+    public List<TableDto> getTopResult() {
+        List<TopTable> table = gameStore.getTopTable();
+        return table.stream()
+                .map(this::convertToDto2)
+                .collect(Collectors.toList());
+    }
+    private TableDto convertToDto2(TopTable table) {
+        TableDto dto = new TableDto();
+        dto.setWinName(table.getWinName().getUsername());
+        dto.setShots(table.getShots());
+        return dto;
     }
 }

@@ -3,9 +3,10 @@
 <html>
 <head>
     <title>Title</title>
-</head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
 <body onload="drawTopTable()">
 <div class="w3-container" style="display: inline-block">
     <p>
@@ -18,28 +19,14 @@
     </p>
 </div>
 <h2>Top 10 players</h2>
-<table class="w3-table-all">
-    <thead>
-    <tr class="w3-green">
-        <th>Place</th>
+<table id="id01">
+    <tr>
         <th>Name</th>
-        <th>Shot</th>
+        <th>Shots</th>
     </tr>
-    </thead>
-    <tr>
-        <td>1</td>
-        <td>Smith</td>
-        <td>50</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>Jackson</td>
-        <td>94</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>Johnson</td>
-        <td>67</td>
+    <tr w3-repeat="customers">
+        <td>{{winName}}</td>
+        <td>{{shots}}</td>
     </tr>
 </table>
 </div>
@@ -66,9 +53,7 @@
         }).then(function (response) {
             return response.json();
         }).then (function (cells) {
-            cells.forEach(function myFunction(myObject) {
-                w3.displayObject("id01", myObject);
-            });
+                w3.displayObject("id01", cells);
         });
     }
 </script>
